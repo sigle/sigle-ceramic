@@ -5,7 +5,6 @@ import * as Fathom from 'fathom-client';
 import posthog from 'posthog-js';
 import { StacksMainnet } from '@stacks/network';
 import { useConnect } from '@stacks/connect-react';
-import { useConnect as legacyUseConnect } from '@stacks/legacy-connect-react';
 import {
   EyeOpenIcon,
   FaceIcon,
@@ -15,6 +14,10 @@ import {
   CheckIcon,
 } from '@radix-ui/react-icons';
 import { toast } from 'react-toastify';
+import { useConnectModal } from '@rainbow-me/rainbowkit';
+import { EthereumAuthProvider } from '@ceramicnetwork/blockchain-utils-linking';
+import { DIDSession } from 'did-session';
+import { useAccount, useDisconnect } from 'wagmi';
 import { Goals } from '../utils/fathom';
 import { Box, Button, Flex, Typography } from '../ui';
 import { LoginLayout } from '../modules/layout/components/LoginLayout';
@@ -74,9 +77,13 @@ const Login = () => {
   const router = useRouter();
   const { user, isLegacy, logout } = useAuth();
   const { status } = useSession();
+  const { address, connector, isConnected } = useAccount();
+  const { disconnect } = useDisconnect();
+  const { openConnectModal } = useConnectModal();
   const { doOpenAuth, sign } = useConnect();
-  const { doOpenAuth: legacyDoOpenAuth } = legacyUseConnect();
   const [signingState, setSigningState] = useState<SigningState>('inactive');
+
+  console.log({ address, isConnected });
 
   useEffect(() => {
     // We keep the user on the login page so he can sign the message
@@ -94,56 +101,81 @@ const Login = () => {
   const handleLogin = () => {
     Fathom.trackGoal(Goals.LOGIN, 0);
     posthog.capture('start-login');
-    doOpenAuth();
+    openConnectModal?.();
   };
 
   const handleSignMessage = async () => {
-    if (!user) return;
+    if (!isConnected || !address) return;
     // TODO as this can take some time add a loading state to the button
     setSigningState('active');
 
-    Fathom.trackGoal(Goals.LOGIN_SIGN_MESSAGE, 0);
+    console.log('signing message 1');
 
-    const callbackUrl = '/protected';
-    const stacksMessage = new SignInWithStacksMessage({
-      domain: `${window.location.protocol}//${window.location.host}`,
-      address: user.profile.stxAddress.mainnet,
-      statement: 'Sign in with Stacks to the app.',
-      uri: window.location.origin,
-      version: '1',
-      chainId: 1,
-      nonce: (await getCsrfToken()) as string,
+    const provider = await connector?.getProvider();
+    if (!provider) return;
+
+    console.log('signing message 2');
+
+    const authProvider = new EthereumAuthProvider(provider, address);
+
+    console.log('signing message 3');
+
+    const nonce = (await getCsrfToken()) as string;
+    const domain = `${window.location.protocol}//${window.location.host}`;
+
+    const session = await DIDSession.authorize(authProvider, {
+      resources: [`ceramic://*`],
+      nonce,
+      domain,
     });
+    console.log('signing message 4');
 
-    const message = stacksMessage.prepareMessage();
+    const did = session.did;
 
-    await sign({
-      network: new StacksMainnet(),
-      message,
-      onFinish: async ({ signature }) => {
-        const signInResult = await signIn<RedirectableProviderType>(
-          'credentials',
-          {
-            message: message,
-            redirect: false,
-            signature,
-            callbackUrl,
-          }
-        );
-        if (signInResult && signInResult.error) {
-          toast.error('Failed to login');
-          setSigningState('inactive');
-        }
-      },
-    });
+    console.log({ did });
+
+    // authProvider.authenticate();
+
+    // Fathom.trackGoal(Goals.LOGIN_SIGN_MESSAGE, 0);
+
+    // const callbackUrl = '/protected';
+    // const stacksMessage = new SignInWithStacksMessage({
+    //   domain: `${window.location.protocol}//${window.location.host}`,
+    //   address: user.profile.stxAddress.mainnet,
+    //   statement: 'Sign in with Stacks to the app.',
+    //   uri: window.location.origin,
+    //   version: '1',
+    //   chainId: 1,
+    //   nonce: (await getCsrfToken()) as string,
+    // });
+
+    // const message = stacksMessage.prepareMessage();
+
+    // await sign({
+    //   network: new StacksMainnet(),
+    //   message,
+    //   onFinish: async ({ signature }) => {
+    //     const signInResult = await signIn<RedirectableProviderType>(
+    //       'credentials',
+    //       {
+    //         message: message,
+    //         redirect: false,
+    //         signature,
+    //         callbackUrl,
+    //       }
+    //     );
+    //     if (signInResult && signInResult.error) {
+    //       toast.error('Failed to login');
+    //       setSigningState('inactive');
+    //     }
+    //   },
+    // });
     setSigningState('complete');
   };
 
-  const handleLoginLegacy = () => {
-    Fathom.trackGoal(Goals.LOGIN, 0);
-    Fathom.trackGoal(Goals.LEGACY_LOGIN, 0);
-    posthog.capture('start-login-legacy');
-    legacyDoOpenAuth();
+  const handleLogout = () => {
+    disconnect();
+    logout();
   };
 
   return (
@@ -238,22 +270,13 @@ const Login = () => {
           boxShadow: '0 1px 0 0 $colors$gray6',
         }}
       >
-        {!user ? (
-          <Button
-            variant="ghost"
-            color="gray"
-            size="lg"
-            onClick={handleLoginLegacy}
-          >
-            Legacy login
-          </Button>
-        ) : (
+        {isConnected && (
           <Button
             variant="ghost"
             color="gray"
             size="lg"
             css={{ gap: '$2' }}
-            onClick={logout}
+            onClick={handleLogout}
           >
             <ArrowLeftIcon width={15} height={15} />
             Change account
@@ -262,14 +285,14 @@ const Login = () => {
         <Button
           color="orange"
           size="lg"
-          onClick={user ? handleSignMessage : handleLogin}
+          onClick={isConnected ? handleSignMessage : handleLogin}
         >
-          {user ? 'Sign message' : 'Connect Wallet'}
+          {isConnected ? 'Sign message' : 'Connect Wallet'}
         </Button>
       </Flex>
       <Box as="hr" css={{ mt: '$3', borderColor: '$gray6' }} />
       <Flex direction="column" gap="3" css={{ mt: '$3', color: '$gray9' }}>
-        {!user ? (
+        {!isConnected ? (
           <>
             <Flex css={{ gap: '$3' }}>
               <div>

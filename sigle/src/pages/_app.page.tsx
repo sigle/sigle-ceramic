@@ -12,6 +12,10 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { SessionProvider } from 'next-auth/react';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
+import '@rainbow-me/rainbowkit/styles.css';
+import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
+import { publicProvider } from 'wagmi/providers/public';
 // TODO add tippy.js only on the pages that are using it
 import 'tippy.js/dist/tippy.css';
 import 'tippy.js/themes/light-border.css';
@@ -34,6 +38,22 @@ const queryClient = new QueryClient({
       retry: false,
     },
   },
+});
+
+const { chains, provider } = configureChains(
+  [chain.mainnet],
+  [publicProvider()]
+);
+
+const { connectors } = getDefaultWallets({
+  appName: 'Sigle',
+  chains,
+});
+
+const wagmiClient = createClient({
+  autoConnect: true,
+  connectors,
+  provider,
 });
 
 /**
@@ -200,15 +220,22 @@ export default class MyApp extends App {
                 refetchInterval={0}
               >
                 <AuthProvider>
-                  <ThemeProvider
-                    disableTransitionOnChange
-                    attribute="class"
-                    value={{ light: 'light-theme', dark: darkTheme.toString() }}
-                  >
-                    <DesignSystemProvider>
-                      <Component {...modifiedPageProps} />
-                    </DesignSystemProvider>
-                  </ThemeProvider>
+                  <WagmiConfig client={wagmiClient}>
+                    <RainbowKitProvider chains={chains}>
+                      <ThemeProvider
+                        disableTransitionOnChange
+                        attribute="class"
+                        value={{
+                          light: 'light-theme',
+                          dark: darkTheme.toString(),
+                        }}
+                      >
+                        <DesignSystemProvider>
+                          <Component {...modifiedPageProps} />
+                        </DesignSystemProvider>
+                      </ThemeProvider>
+                    </RainbowKitProvider>
+                  </WagmiConfig>
                 </AuthProvider>
               </SessionProvider>
             </FeatureFlagsProvider>
