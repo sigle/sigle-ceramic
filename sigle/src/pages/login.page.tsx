@@ -108,8 +108,6 @@ const Login = () => {
     logout();
   };
 
-  console.log({ isWagmiConnected, address });
-
   return (
     <LoginLayout>
       <Flex gap="1" css={{ my: '$15' }} align="center">

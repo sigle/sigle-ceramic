@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useMemo } from 'react';
 import { getCsrfToken, signOut as nextAuthSignOut } from 'next-auth/react';
-import { useAccount, useDisconnect } from 'wagmi';
+import { useAccount, useDisconnect, useProvider } from 'wagmi';
 import { EthereumAuthProvider } from '@ceramicnetwork/blockchain-utils-linking';
 import { DIDSession } from 'did-session';
 
@@ -63,29 +63,57 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     isAuthenticated: false,
   });
 
-  const { address, connector } = useAccount();
+  const { address, status } = useAccount();
   const { disconnect: wagmiDisconnect } = useDisconnect();
+  const provider = useProvider();
 
   useEffect(() => {
-    // TODO on mount check if user is logged in
-  }, []);
+    if (status === 'connected') {
+      loginWithCeramic();
+    }
+  }, [status]);
+
+  /**
+   * Load the ceramic session from local storage.
+   * If no session is found, create a new one and save it to local storage.
+   */
+  const loadCeramicSession = async (authProvider: EthereumAuthProvider) => {
+    const sessionStr = localStorage.getItem('didsession');
+    let session: DIDSession | undefined;
+
+    if (sessionStr) {
+      session = await DIDSession.fromSession(sessionStr);
+    }
+
+    if (!session || (session.hasSession && session.isExpired)) {
+      const nonce = (await getCsrfToken()) as string;
+      const domain = `${window.location.protocol}//${window.location.host}`;
+
+      session = await DIDSession.authorize(authProvider, {
+        resources: [`ceramic://*`],
+        nonce,
+        domain,
+      });
+      localStorage.setItem('didsession', session.serialize());
+    }
+
+    return session;
+  };
 
   const loginWithCeramic = useCallback(async () => {
-    const provider = await connector?.getProvider();
-    if (!provider || !address) return;
+    if (!provider || !address) {
+      setState({
+        isLoading: false,
+        isAuthenticated: false,
+        user: undefined,
+        didSession: undefined,
+      });
+      return;
+    }
 
     const authProvider = new EthereumAuthProvider(provider, address);
 
-    const nonce = (await getCsrfToken()) as string;
-    const domain = `${window.location.protocol}//${window.location.host}`;
-
-    const session = await DIDSession.authorize(authProvider, {
-      resources: [`ceramic://*`],
-      nonce,
-      domain,
-    });
-
-    // TODO save session in localStorage
+    const session = await loadCeramicSession(authProvider);
 
     setState({
       isLoading: false,
