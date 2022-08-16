@@ -125,7 +125,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const logout = useCallback(async () => {
     wagmiDisconnect();
-    // TODO clear ceramic session
+    localStorage.removeItem('didsession');
     await nextAuthSignOut();
     setState({
       isLoading: false,
