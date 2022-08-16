@@ -30,6 +30,7 @@ import { darkTheme, globalCss } from '../stitches.config';
 import { ThemeProvider } from 'next-themes';
 import { FeatureFlagsProvider } from '../utils/featureFlags';
 import { DesignSystemProvider } from '../ui';
+import { NewAuthProvider } from '../modules/auth/NewAuthContext';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -222,18 +223,20 @@ export default class MyApp extends App {
                 <AuthProvider>
                   <WagmiConfig client={wagmiClient}>
                     <RainbowKitProvider chains={chains}>
-                      <ThemeProvider
-                        disableTransitionOnChange
-                        attribute="class"
-                        value={{
-                          light: 'light-theme',
-                          dark: darkTheme.toString(),
-                        }}
-                      >
-                        <DesignSystemProvider>
-                          <Component {...modifiedPageProps} />
-                        </DesignSystemProvider>
-                      </ThemeProvider>
+                      <NewAuthProvider>
+                        <ThemeProvider
+                          disableTransitionOnChange
+                          attribute="class"
+                          value={{
+                            light: 'light-theme',
+                            dark: darkTheme.toString(),
+                          }}
+                        >
+                          <DesignSystemProvider>
+                            <Component {...modifiedPageProps} />
+                          </DesignSystemProvider>
+                        </ThemeProvider>
+                      </NewAuthProvider>
                     </RainbowKitProvider>
                   </WagmiConfig>
                 </AuthProvider>
