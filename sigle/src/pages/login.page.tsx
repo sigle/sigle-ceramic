@@ -71,7 +71,7 @@ type SigningState = 'inactive' | 'active' | 'complete';
 const Login = () => {
   const router = useRouter();
   const { user, isAuthenticated, loginWithCeramic, logout } = useNewAuth();
-  const { address, connector, isConnected: isWagmiConnected } = useAccount();
+  const { isConnected: isWagmiConnected } = useAccount();
   const { disconnect } = useDisconnect();
   const { openConnectModal } = useConnectModal();
   const [signingState, setSigningState] = useState<SigningState>('inactive');
