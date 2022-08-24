@@ -80,7 +80,6 @@ const Login = () => {
     // If user is already logged in we redirect him to the homepage
     if (isAuthenticated) {
       router.push(`/`);
-      console.log('push');
     }
   }, [router, isAuthenticated]);
 
