@@ -11,8 +11,6 @@ export const Protected = ({ children }: Props) => {
   const router = useRouter();
   const { isAuthenticated, isLoading } = useNewAuth();
 
-  console.log(isAuthenticated, isLoading);
-
   // We show a big loading screen while the user is signing in
   if (isLoading) {
     return <FullScreenLoading />;
