@@ -15,6 +15,7 @@ import 'nprogress/nprogress.css';
 import '@rainbow-me/rainbowkit/styles.css';
 import { getDefaultWallets, RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { chain, configureChains, createClient, WagmiConfig } from 'wagmi';
+import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 // TODO add tippy.js only on the pages that are using it
 import 'tippy.js/dist/tippy.css';
@@ -43,7 +44,10 @@ const queryClient = new QueryClient({
 
 const { chains, provider } = configureChains(
   [chain.mainnet],
-  [publicProvider()]
+  [
+    alchemyProvider({ apiKey: 'qG2vjM6Ih3g_fwragYIa160ywP5dKLuQ' }),
+    publicProvider(),
+  ]
 );
 
 const { connectors } = getDefaultWallets({

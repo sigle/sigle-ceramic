@@ -113,7 +113,7 @@ importers:
       '@radix-ui/react-switch': 1.0.0
       '@radix-ui/react-tabs': 1.0.0
       '@radix-ui/react-tooltip': 1.0.0
-      '@rainbow-me/rainbowkit': 0.4.5
+      '@rainbow-me/rainbowkit': 0.5.0
       '@sentry/nextjs': 7.7.0
       '@sigle/slate-to-html': 1.0.0
       '@sigle/tailwind-style': workspace:^1.1.0
@@ -227,7 +227,7 @@ importers:
       tippy.js: 6.3.7
       typescript: 4.7.4
       valid-url: 1.0.9
-      wagmi: 0.6.1
+      wagmi: 0.6.4
     dependencies:
       '@ceramicnetwork/blockchain-utils-linking': 2.0.8
       '@radix-ui/colors': 0.1.8
@@ -240,7 +240,7 @@ importers:
       '@radix-ui/react-switch': 1.0.0_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-tabs': 1.0.0_biqbaboplfbrettd7655fr4n2y
       '@radix-ui/react-tooltip': 1.0.0_bb2bxwco6ptpubzwpazr52qf6i
-      '@rainbow-me/rainbowkit': 0.4.5_e3l36fg5yiuaj75b7ktzipa75a
+      '@rainbow-me/rainbowkit': 0.5.0_aroke3gg6cw7lepahezxkuxp4q
       '@sentry/nextjs': 7.7.0_next@12.2.3+react@18.2.0
       '@sigle/slate-to-html': 1.0.0_2wpyb3adm2ew3oavbkchamis5q
       '@stacks/auth': 4.3.3
@@ -329,7 +329,7 @@ importers:
       sanitize-html: 2.7.0
       tippy.js: 6.3.7
       valid-url: 1.0.9
-      wagmi: 0.6.1_um4cugg2i3ywhvigsmvsir7hgy
+      wagmi: 0.6.4_um4cugg2i3ywhvigsmvsir7hgy
     devDependencies:
       '@fontsource/open-sans': 4.5.10
       '@next/bundle-analyzer': 12.2.3
@@ -1177,7 +1177,7 @@ packages:
     dependencies:
       '@metamask/safe-event-emitter': 2.0.0
       bind-decorator: 1.0.11
-      bn.js: 5.2.0
+      bn.js: 5.2.1
       buffer: 6.0.3
       clsx: 1.1.1
       eth-block-tracker: 4.4.3
@@ -2935,8 +2935,8 @@ packages:
       '@babel/runtime': 7.17.9
     dev: false
 
-  /@rainbow-me/rainbowkit/0.4.5_e3l36fg5yiuaj75b7ktzipa75a:
-    resolution: {integrity: sha512-9JikVOkkaK41T3a1Tg8VK1h92QDJsC9Fk7vSkEmNI99gM9MKRdbsrHyRwM1Z1U/0I/PnYAi8CvShfjwfNw5jAg==}
+  /@rainbow-me/rainbowkit/0.5.0_aroke3gg6cw7lepahezxkuxp4q:
+    resolution: {integrity: sha512-QM6WNahwYGu6HHGshEReYULHxe//z3M9uD2aX+2cq0sN6tAkUa8zLRb5MGahldPnl0g/RLCD9AYkDkU2tD5nlA==}
     engines: {node: '>=12.4'}
     peerDependencies:
       ethers: '>=5.5.1'
@@ -2953,7 +2953,7 @@ packages:
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-remove-scroll: 2.5.4_3hx2ussxxho4jajbwrd6gq34qe
-      wagmi: 0.6.1_um4cugg2i3ywhvigsmvsir7hgy
+      wagmi: 0.6.4_um4cugg2i3ywhvigsmvsir7hgy
     transitivePeerDependencies:
       - '@types/react'
     dev: false
@@ -3889,6 +3889,37 @@ packages:
       lodash.merge: 4.6.2
       tailwindcss: 3.0.23
     dev: true
+
+  /@tanstack/query-core/4.2.1:
+    resolution: {integrity: sha512-UOyOhHKLS/5i9qG2iUnZNVV3R9riJJmG9eG+hnMFIPT/oRh5UzAfjxCtBneNgPQZLDuP8y6YtRYs/n4qVAD5Ng==}
+    dev: false
+
+  /@tanstack/query-sync-storage-persister/4.2.1:
+    resolution: {integrity: sha512-exjzMdQ00CfGD/FTPgzxciC57Uvs2SbltEumPpVENvWs2L/Bf7Lxy9rTMVqzgCORHINd1RVPBhN8Lx5fnzPIKQ==}
+    dev: false
+
+  /@tanstack/react-query-persist-client/4.2.1:
+    resolution: {integrity: sha512-5z3oo6S8stiPTFK7hmv4O04ZTMgdCrhgV+cq+z0t2NJwd5eeKPLrAUSBM+ah9eEhUlzs5ZEhaYeSwtPopOjYdg==}
+    dev: false
+
+  /@tanstack/react-query/4.2.1_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-w02oTOYpoxoBzD/onAGRQNeLAvggLn7WZjS811cT05WAE/4Q3br0PTp388M7tnmyYGbgOOhFq0MkhH0wIfAKqA==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+      react-native: '*'
+    peerDependenciesMeta:
+      react-dom:
+        optional: true
+      react-native:
+        optional: true
+    dependencies:
+      '@tanstack/query-core': 4.2.1
+      '@types/use-sync-external-store': 0.0.3
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      use-sync-external-store: 1.2.0_react@18.2.0
+    dev: false
 
   /@testing-library/dom/8.13.0:
     resolution: {integrity: sha512-9VHgfIatKNXQNaZTtLnalIy0jNZzY35a4S3oi08YAt9Hv1VsfZ/DfA45lM8D/UhtHBGJ4/lGwp0PZkVndRkoOQ==}
@@ -5072,8 +5103,8 @@ packages:
       react-use-measure: 2.1.1_biqbaboplfbrettd7655fr4n2y
     dev: false
 
-  /@wagmi/core/0.5.1_6ihxxpftkzewcisdp7osyx524i:
-    resolution: {integrity: sha512-EgFppUNDLVtjThSoGqr3yzY/jq5qZUPhCgfubcPGET8Xd1OMoag/Z85e2krcxkVZ+ExWPSUGCFLau4odd2PDFQ==}
+  /@wagmi/core/0.5.4_6ihxxpftkzewcisdp7osyx524i:
+    resolution: {integrity: sha512-EisAQTXyglnfzALHRnI8rSXlt95O3KNgBN4fHOQvYj6sBOsp/t9ooaqMIbqn4v5xMJSjmYgnQH1J5InQOcTCNg==}
     peerDependencies:
       '@coinbase/wallet-sdk': '>=3.3.0'
       '@walletconnect/ethereum-provider': '>=1.7.5'
@@ -11751,27 +11782,6 @@ packages:
       react-dom: 18.2.0_react@18.2.0
     dev: false
 
-  /react-query/4.0.0-beta.23_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-e6mNBVAYGy0M1OwX0mhRB/lCkOedKeqTUrbPjNCqvm8hQGUsJJobqfHVvTv8o6JJaOO2MFcxKF4vZM+PEKbHZA==}
-    peerDependencies:
-      react: ^16.8.0 || ^17.0.0 || ^18.0.0
-      react-dom: '*'
-      react-native: '*'
-    peerDependenciesMeta:
-      react-dom:
-        optional: true
-      react-native:
-        optional: true
-    dependencies:
-      '@babel/runtime': 7.17.9
-      '@types/use-sync-external-store': 0.0.3
-      broadcast-channel: 3.7.0
-      match-sorter: 6.3.1
-      react: 18.2.0
-      react-dom: 18.2.0_react@18.2.0
-      use-sync-external-store: 1.2.0_react@18.2.0
-    dev: false
-
   /react-remove-scroll-bar/2.3.3_3hx2ussxxho4jajbwrd6gq34qe:
     resolution: {integrity: sha512-i9GMNWwpz8XpUpQ6QlevUtFjHGqnPG4Hxs+wlIJntu/xcsZVEpJcIV71K3ZkqNy2q3GfgvkD7y6t/Sv8ofYSbw==}
     engines: {node: '>=10'}
@@ -13528,18 +13538,20 @@ packages:
       xml-name-validator: 4.0.0
     dev: true
 
-  /wagmi/0.6.1_um4cugg2i3ywhvigsmvsir7hgy:
-    resolution: {integrity: sha512-QS/QDlRz6vVt8ZcKqaR7OGawQcN6mC/qCEhmO1qAmXx3LTkNyszBDJOdvn6AuGAljFowqb6aqD87RcKfjyEhyQ==}
+  /wagmi/0.6.4_um4cugg2i3ywhvigsmvsir7hgy:
+    resolution: {integrity: sha512-obP1t+nfdfB0Y7eIVPrpWw8tVftF5HHdtwi214En7yubuU5cbV+AMkI8z8Mj0NteHo805frShnss9L1jzMqNuQ==}
     peerDependencies:
       ethers: '>=5.5.1'
       react: '>=17.0.0'
     dependencies:
       '@coinbase/wallet-sdk': 3.4.0
-      '@wagmi/core': 0.5.1_6ihxxpftkzewcisdp7osyx524i
+      '@tanstack/query-sync-storage-persister': 4.2.1
+      '@tanstack/react-query': 4.2.1_biqbaboplfbrettd7655fr4n2y
+      '@tanstack/react-query-persist-client': 4.2.1
+      '@wagmi/core': 0.5.4_6ihxxpftkzewcisdp7osyx524i
       '@walletconnect/ethereum-provider': 1.8.0
       ethers: 5.6.9
       react: 18.2.0
-      react-query: 4.0.0-beta.23_biqbaboplfbrettd7655fr4n2y
       use-sync-external-store: 1.2.0_react@18.2.0
     transitivePeerDependencies:
       - '@babel/core'

@@ -111,7 +111,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       return;
     }
 
-    const authProvider = new EthereumAuthProvider(provider, address);
+    // TODO fix for now but we should be able to use the injected provider by wagmi
+    const test = window.ethereum;
+    const authProvider = new EthereumAuthProvider(test, address);
 
     const session = await loadCeramicSession(authProvider);
 
