@@ -35,6 +35,20 @@ Now you can run run the following command to install the dependencies:
 pnpm install
 ```
 
+## Setup the required docker services
+
+We use docker to start the required services for the project.
+
+```sh
+docker compose start
+```
+
+The following services are started:
+
+- postgres database
+- ipfs daemon
+- ceramic daemon
+
 ## Setup server
 
 ### Set up environment variables
@@ -44,14 +58,6 @@ Copy the `env.example` file in the application directory to `.env` (which will b
 ```sh
 cd sigle
 cp .env.example .env
-```
-
-### Start the databases
-
-We use docker to manage the local postgres database.
-
-```sh
-docker-compose start
 ```
 
 ### Setup the database

@@ -1,22 +1,52 @@
 version: '3.7'
 services:
-  redis:
-    image: 'redis:6.2'
-    ports:
-      - '6379:6379'
-
-  postgres:
-    image: postgres:14
+  postgres-ceramic:
+    image: 'postgres:14.4'
     restart: always
     ports:
-      - '5432:5432'
+      - '5433:5433'
     volumes:
-      - pg_db_data:/var/lib/postgresql/data
+      - ceramic_pg_db_data:/var/lib/postgresql/data
     environment:
       POSTGRES_USER: postgresuser
       POSTGRES_PASSWORD: postgrespassword
       POSTGRES_DB: postgresdb
-      POSTGRES_PORT: 5432
+      POSTGRES_PORT: 5433
+    networks:
+      - sigle-network
+
+  ipfs:
+    image: ceramicnetwork/go-ipfs-daemon:latest
+    volumes:
+      - "ipfs_data:/data/ipfs"
+    ports:
+      # API port
+      - "5001:5001"
+      # Healthcheck port
+      - "8011:8011"
+    networks:
+      - sigle-network
+
+  ceranic:
+    image: 'ceramicnetwork/js-ceramic:2.5.0-rc.1'
+    entrypoint: ""
+    command: bash -c "cd packages/cli && ./bin/ceramic.js daemon --config /root/.ceramic/daemon.config.json"
+    ports:
+      - '7007:7007'
+    volumes:
+      # Inject config file
+      - ./ceramic/dev-daemon.config.json:/root/.ceramic/daemon.config.json
+      - ceramic_statestore:/root/.ceramic/statestore
+    depends_on:
+      - postgres-ceramic
+      - ipfs
+    networks:
+      - sigle-network
 
 volumes:
-  pg_db_data:
+  ipfs_data:
+  ceramic_statestore:
+  ceramic_pg_db_data:
+
+networks:
+  sigle-network:
