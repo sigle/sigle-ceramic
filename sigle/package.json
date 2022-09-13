@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@ceramicnetwork/blockchain-utils-linking": "2.0.8",
+    "@ceramicnetwork/http-client": "2.3.3",
     "@composedb/client": "0.2.0",
     "@radix-ui/colors": "0.1.8",
     "@radix-ui/react-accordion": "1.0.0",
